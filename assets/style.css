@@ -1,15 +1,47 @@
+.mike-list a, .mike-grid-container a {
+    color: #34495E;
+    text-decoration: none;
+    text-transform: uppercase;
+}
+
+.mike-list a:hover, .mike-grid-container a:hover {
+    color: #5DADE2;
+    text-decoration: underline;
+}
+
+/* GRID */
 .mike-grid-container {
     display: grid;
     grid-template-columns: auto auto auto;
     padding: 10px;
 }
 
-.mike-grid-container a {
-    color: #34495E;
-    text-decoration: none;
-    text-transform: uppercase;
-}
-
 .mike-grid-item {
     padding: 20px;
+}
+
+/* List */
+
+.mike-list {
+    list-style: none;
+}
+
+/* Load more button */
+
+.mike-load-more {
+    text-align: center;
+}
+
+.mike-load-more-button {
+    color: #fff;
+    background: #273746;
+    padding: 10px 15px;
+    -webkit-border-radius: 3px;
+    -moz-border-radius: 3px;
+    border-radius: 3px;
+}
+
+.mike-load-more-error {
+    display: none;
+    color: #C0392B;
 }

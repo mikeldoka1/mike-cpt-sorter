@@ -4,7 +4,10 @@
  * Autoload classes.
  *
  * @param string $class The fully-qualified class name.
+ *
  * @return void
+ * @link https://www.php-fig.org/psr/psr-4/
+ * @see https://github.com/php-fig/fig-standards/blob/master/accepted/PSR-4-autoloader-examples.md
  */
 spl_autoload_register(static function ($class) {
 

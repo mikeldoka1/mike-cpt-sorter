@@ -19,7 +19,7 @@ class Shortcode {
 
 		if ($displayPreferences === 'list') {
 
-			$html = '<ul>';
+			$html = '<ul class="mike-list">';
 
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
@@ -27,41 +27,47 @@ class Shortcode {
 			}
 
 			$html .= '</ul>';
+		} else {
 
-			wp_reset_postdata();
+			$html = '<div class="mike-grid-container">';
 
-			return $html;
-		}
-
-		$html = '<div class="mike-grid-container">';
-
-		while ( $the_query->have_posts() ) {
-			$the_query->the_post();
+			while ( $the_query->have_posts() ) {
+				$the_query->the_post();
 
 
-			$featuredImageUrl = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+				$featuredImageUrl = get_the_post_thumbnail_url(get_the_ID(), 'medium');
 
-			if (empty($featuredImageUrl)) {
-				$featuredImageUrl = 'https://placehold.co/600x400?text=' . get_the_title();
+				if (empty($featuredImageUrl)) {
+					$featuredImageUrl = 'https://placehold.co/600x400?text=' . get_the_title();
+				}
+
+				$html .= '<div class="mike-grid-item"><h3><a href="' . get_permalink() . '">' . esc_html( get_the_title() ) . '</a></h3>';
+
+				$html .= '<img src="' . $featuredImageUrl . '" alt="' . get_the_title() . '">';
+
+				$html .= '</div>';
 			}
 
-			$html .= '<div class="mike-grid-item"><h3><a href="' . get_permalink() . '">' . esc_html( get_the_title() ) . '</a></h3>';
 
-			$html .= '<img src="' . $featuredImageUrl . '" alt="' . get_the_title() . '">';
 
 			$html .= '</div>';
+
 		}
 
-
-
-		$html .= '</div>';
-
-		$html .= '<div>' . previous_posts_link( 'Older posts' ) . '</div>
-		<div>' . next_posts_link( 'Newer posts' ) . '</div>';
+		$html .= '<div class="mike-load-more">
+				<button class="mike-load-more-button"
+					data-post-types="' . $postTypes . '"
+					data-per-page="' . $postsPerPage . '"
+					>
+					Load more
+					</button>
+					<p class="mike-load-more-error">No more posts found!</p>
+				</div>';
 
 		wp_reset_postdata();
 
 		wp_enqueue_style('mike-stylesheet');
+		wp_enqueue_script('mike-load-more', plugins_url('/assets/pagination.js', MIKE_CPT_SORTER_PLUGIN_PATH), array('jquery'));
 
 		return $html;
 	}
