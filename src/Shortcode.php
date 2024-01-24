@@ -28,7 +28,6 @@ class Shortcode {
 
 			$html .= '</ul>';
 		} else {
-
 			$html = '<div class="mike-grid-container">';
 
 			while ( $the_query->have_posts() ) {
@@ -48,26 +47,23 @@ class Shortcode {
 				$html .= '</div>';
 			}
 
-
-
 			$html .= '</div>';
-
 		}
 
 		$html .= '<div class="mike-load-more">
-				<button class="mike-load-more-button"
-					data-post-types="' . $postTypes . '"
-					data-per-page="' . $postsPerPage . '"
-					>
-					Load more
-					</button>
-					<p class="mike-load-more-error">No more posts found!</p>
-				</div>';
+			<button class="mike-load-more-button"
+				data-post-types="' . $postTypes . '"
+				data-per-page="' . $postsPerPage . '"
+				>
+				Load more
+				</button>
+				<p class="mike-load-more-error">No more posts found!</p>
+			</div>';
 
 		wp_reset_postdata();
 
 		wp_enqueue_style('mike-stylesheet');
-		wp_enqueue_script('mike-load-more', plugins_url('/assets/pagination.js', MIKE_CPT_SORTER_PLUGIN_PATH), array('jquery'));
+		wp_enqueue_script('mike-load-more');
 
 		return $html;
 	}

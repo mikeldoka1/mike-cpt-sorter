@@ -4,10 +4,19 @@ namespace Mike\Src;
 use WP_REST_Request;
 
 class ApiResponse {
+
+	/**
+	 * Return api response based on request conditions
+	 * Both json and html are returned
+	 * To offload work for frontend we prepare the html based on display preferences.
+	 * @param WP_REST_Request $request
+	 *
+	 * @return void
+	 */
 	public static function getPosts( WP_REST_Request $request): void {
 
 		$postTypes = $request['post_types'] ?? 'post';
-		$postsPerPage = (int) ( $request['posts_per_page'] ?? get_option( 'mike_cpt_sorter_per_page', 9 ) );
+		$postsPerPage = (int) ( $request['posts_per_page'] ?? get_option( option: 'mike_cpt_sorter_per_page', default_value: 9 ) );
 		$paged = (int) ($request['paged'] ?? 1);
 
 		$displayPreferences = get_option('mike_cpt_sorter_display_type');

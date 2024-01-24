@@ -20,8 +20,8 @@ class Queries {
 
 		return new WP_Query( query: [
 			'post_type' => $postTypes,
-			'posts_per_page' => (int) $postsPerPage,
-			'paged' => (int) $paged,
+			'posts_per_page' => $postsPerPage,
+			'paged' => $paged,
 		]);
 	}
 

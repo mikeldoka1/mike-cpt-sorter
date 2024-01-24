@@ -17,7 +17,7 @@ jQuery('.mike-load-more-button').on('click', function() {
         success: function (res) {
             jQuery.each(res.data, function (i, value) {
                 if (jQuery('.mike-grid-container').length){
-                    jQuery(this).append(value.html);
+                    jQuery('.mike-grid-container').append(value.html);
                 } else {
                     jQuery('.mike-list').append(value.html);
                 }
