@@ -13,12 +13,13 @@ class Queries {
 	 *
 	 * @return WP_Query
 	 */
-	public static function buildQuery(string|array $postTypes, int $postsPerPage, int $paged = 1): WP_Query {
+	public static function buildQuery(string|array $postTypes, int $postsPerPage, int $paged = 1, ?string $searchQuery = null): WP_Query {
 
 		$postTypes = sanitize_text_field($postTypes);
 		$postTypes = self::preparePostTypes($postTypes);
 
 		return new WP_Query( query: [
+			's' => $searchQuery,
 			'post_type' => $postTypes,
 			'posts_per_page' => $postsPerPage,
 			'paged' => $paged,

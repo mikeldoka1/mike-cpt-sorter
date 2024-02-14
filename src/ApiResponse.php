@@ -18,10 +18,11 @@ class ApiResponse {
 		$postTypes = $request['post_types'] ?? 'post';
 		$postsPerPage = (int) ( $request['posts_per_page'] ?? get_option( option: 'mike_cpt_sorter_per_page', default_value: 9 ) );
 		$paged = (int) ($request['paged'] ?? 1);
+		$searchQuery = $request['s'];
 
 		$displayPreferences = get_option('mike_cpt_sorter_display_type');
 
-		$query = Queries::buildQuery($postTypes, $postsPerPage, $paged);
+		$query = Queries::buildQuery($postTypes, $postsPerPage, $paged, $searchQuery);
 
 		if (! $query->have_posts()) {
 			wp_send_json_error(status_code: 400);

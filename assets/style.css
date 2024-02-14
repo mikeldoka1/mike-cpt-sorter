@@ -45,3 +45,36 @@
     display: none;
     color: #C0392B;
 }
+
+
+.mike-list ul {
+    padding-inline-start: 1.5em;
+    font-weight: 400;
+
+    ::marker {
+        content: ">";
+        color: #48b;
+    }
+
+    ul ::marker {
+        content: ">>";
+    }
+}
+
+.mike-list li {
+    position: relative;
+    padding-inline-start: 0.5em;
+    padding-top: 1.5em;
+    border-bottom: 1px solid #48b2;
+    cursor: default;
+    transition: color 0.4s;
+
+    &:hover {
+        color: #48b;
+
+        &::marker {
+            font-weight: 700;
+        }
+
+    }
+}

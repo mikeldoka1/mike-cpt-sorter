@@ -1,31 +1,60 @@
-let currentPage = 1;
-jQuery('.mike-load-more-button').on('click', function() {
-    currentPage++;
+jQuery(function($) {
+    const $searchBox = $('.mike-search-box');
+    const $searchText = $('.mike-search-text');
+    const $searchSubmit = $('.mike-search-submit');
+    const $loadMoreButton = $('.mike-load-more-button');
+    const $gridContainer = $('.mike-grid-container');
+    const $list = $('.mike-list');
+    const $loadMoreError = $('.mike-load-more-error');
+    let currentPage = 1;
 
-    let postTypes = jQuery(this).attr('data-post-types');
-    let perPage = jQuery(this).attr('data-per-page');
-
-    jQuery.ajax({
-        type: 'POST',
-        url: '/wp-json/mike_cpt/v1/paginate',
-        dataType: 'json',
-        data: {
-            paged: currentPage,
-            post_types: postTypes,
-            posts_per_page: perPage,
-        },
-        success: function (res) {
-            jQuery.each(res.data, function (i, value) {
-                if (jQuery('.mike-grid-container').length){
-                    jQuery('.mike-grid-container').append(value.html);
-                } else {
-                    jQuery('.mike-list').append(value.html);
-                }
-            });
-        },
-        error: function () {
-            jQuery('.mike-load-more-error').css('display', 'block');
-            jQuery('.mike-load-more-button').hide();
-        }
+    $searchBox.on('submit', function(e) {
+        e.preventDefault();
+        const searchQuery = $searchText.val();
+        const postTypes = $searchSubmit.data('post-types');
+        const perPage = $searchSubmit.data('per-page');
+        mikeLoadPosts(postTypes, perPage, 1, searchQuery, true);
     });
+
+    $loadMoreButton.on('click', function() {
+        currentPage++;
+        const postTypes = $searchSubmit.data('post-types');
+        const perPage = $searchSubmit.data('per-page');
+        const searchQuery = $searchText.val();
+        mikeLoadPosts(postTypes, perPage, currentPage, searchQuery);
+    });
+
+    function mikeLoadPosts(postTypes, perPage, paged = 1, searchQuery = null, isSearch = false) {
+        $.ajax({
+            type: 'POST',
+            url: '/wp-json/mike_cpt/v1/paginate',
+            dataType: 'json',
+            data: {
+                s: searchQuery,
+                paged: paged,
+                post_types: postTypes,
+                posts_per_page: perPage,
+            },
+            success: function(res) {
+                const htmlItems = res.data.map(value => value.html);
+                $loadMoreError.css('display', 'none');
+                if (res.data.length === parseInt(perPage)) {
+                    $loadMoreButton.show();
+                } else {
+                    $loadMoreButton.hide();
+                }
+                if (isSearch) {
+                    $gridContainer.html(htmlItems);
+                    $list.html(htmlItems);
+                } else {
+                    $gridContainer.append(htmlItems);
+                    $list.append(htmlItems);
+                }
+            },
+            error: function() {
+                $loadMoreError.css('display', 'block');
+                $loadMoreButton.hide();
+            }
+        });
+    }
 });

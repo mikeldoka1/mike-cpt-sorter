@@ -4,22 +4,35 @@ namespace Mike\Src;
 
 class Shortcode {
 
-	public static function registerShortcode($atts): string {
+	public static function registerShortcode( $atts ): string {
 
 		$postsPerPage = (int) ( $atts['element-count'] ?? get_option( 'mike_cpt_sorter_per_page', 9 ) );
-		$postTypes = $atts['post-types'] ?? 'post';
+		$postTypes    = $atts['post-types'] ?? 'post';
 
-		$the_query = Queries::buildQuery($postTypes, $postsPerPage);
+		$the_query = Queries::buildQuery( $postTypes, $postsPerPage );
 
-		$displayPreferences = get_option('mike_cpt_sorter_display_type');
+		$displayPreferences = get_option( 'mike_cpt_sorter_display_type' );
 
-		if (! $the_query->have_posts()) {
+		if ( ! $the_query->have_posts() ) {
 			return '<p>Sorry, no posts matched your criteria.</p>';
 		}
 
-		if ($displayPreferences === 'list') {
+		$html = '<form class="mike-search-box">
+				<input type="text" class="mike-search-text" required>
+				<input
+					type="submit"
+					value="search"
+					class="mike-search-submit"
+					data-post-types="' . $postTypes . '"
+					data-per-page="' . $postsPerPage . '"
+				>
+				<p class="mike-load-more-error">No more posts found!</p>
+			</form>';
 
-			$html = '<ul class="mike-list">';
+		if ( $displayPreferences === 'list' ) {
+
+
+			$html .= '<ul class="mike-list">';
 
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
@@ -28,15 +41,15 @@ class Shortcode {
 
 			$html .= '</ul>';
 		} else {
-			$html = '<div class="mike-grid-container">';
+			$html .= '<div class="mike-grid-container">';
 
 			while ( $the_query->have_posts() ) {
 				$the_query->the_post();
 
 
-				$featuredImageUrl = get_the_post_thumbnail_url(get_the_ID(), 'medium');
+				$featuredImageUrl = get_the_post_thumbnail_url( get_the_ID(), 'medium' );
 
-				if (empty($featuredImageUrl)) {
+				if ( empty( $featuredImageUrl ) ) {
 					$featuredImageUrl = 'https://placehold.co/600x400?text=' . get_the_title();
 				}
 
@@ -51,19 +64,14 @@ class Shortcode {
 		}
 
 		$html .= '<div class="mike-load-more">
-			<button class="mike-load-more-button"
-				data-post-types="' . $postTypes . '"
-				data-per-page="' . $postsPerPage . '"
-				>
-				Load more
-				</button>
+					<button class="mike-load-more-button">Load more</button>
 				<p class="mike-load-more-error">No more posts found!</p>
 			</div>';
 
 		wp_reset_postdata();
 
-		wp_enqueue_style('mike-stylesheet');
-		wp_enqueue_script('mike-load-more');
+		wp_enqueue_style( 'mike-stylesheet' );
+		wp_enqueue_script( 'mike-load-more' );
 
 		return $html;
 	}
