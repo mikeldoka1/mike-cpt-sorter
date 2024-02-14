@@ -18,6 +18,8 @@ class Queries {
 		$postTypes = sanitize_text_field($postTypes);
 		$postTypes = self::preparePostTypes($postTypes);
 
+		$searchQuery = $searchQuery ? sanitize_text_field($searchQuery) : null;
+
 		return new WP_Query( query: [
 			's' => $searchQuery,
 			'post_type' => $postTypes,
